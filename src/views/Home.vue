@@ -1,15 +1,26 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5 side">
+        <sidebar />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-
+import Sidebar from "./Sidebar.vue";
 @Options({
-  components: {},
+  components: {
+    Sidebar,
+  },
 })
 export default class Home extends Vue {}
 </script>
+<style>
+.side {
+  margin-left: -7rem;
+  margin-top: 0.5rem;
+}
+</style>

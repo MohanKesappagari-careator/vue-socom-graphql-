@@ -1,12 +1,19 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
 
-export default createStore({
-  state: {
+export const store = createStore({
+  state() {
+    return {
+      user: {
+        token: "",
+        userId: "",
+      },
+    };
   },
   mutations: {
+    auth(state: any, payload) {
+      state.user.userId = payload.userId;
+      state.user.token = payload.token;
+      console.log(payload, "..");
+    },
   },
-  actions: {
-  },
-  modules: {
-  }
-})
+});

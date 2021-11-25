@@ -136,6 +136,7 @@
 
 <script>
 import { Options, Vue } from "vue-class-component";
+import { mapMutations } from "vuex";
 import gql from "graphql-tag";
 @Options({
   data() {
@@ -146,6 +147,8 @@ import gql from "graphql-tag";
   },
   components: {},
   methods: {
+    ...mapMutations(["auth"]),
+
     login() {
       console.log(this.email, this.password);
       this.$apollo
@@ -154,6 +157,7 @@ import gql from "graphql-tag";
             mutation ($login: LoginInput!) {
               login(login: $login) {
                 token
+                userId
               }
             }
           `,
@@ -163,6 +167,8 @@ import gql from "graphql-tag";
         })
         .then((data) => {
           console.log(data);
+          this.auth(data.data.login);
+          this.$router.push("/home");
         })
         .catch((e) => {
           console.log(e);
