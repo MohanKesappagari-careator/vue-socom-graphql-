@@ -168,6 +168,7 @@ import gql from "graphql-tag";
         .then((data) => {
           console.log(data);
           this.auth(data.data.login);
+          localStorage.setItem("token", data.data.login.token);
           this.$router.push("/home");
         })
         .catch((e) => {

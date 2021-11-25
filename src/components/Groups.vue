@@ -1,22 +1,14 @@
 <template>
-  <div class="group">
+  <div
+    class="group"
+    v-for="(group, index) of allgroupUserByUserId"
+    :key="index"
+  >
     <div class="inside">
       <div class="start">
         <img :src="image" alt="" class="img1" />
         <div class="person">
-          <h5>{{ name }}</h5>
-          <p>{{ msg }}</p>
-        </div>
-      </div>
-      <div class="end">
-        <p>5pm</p>
-      </div>
-    </div>
-    <div class="inside">
-      <div class="start">
-        <img :src="image" alt="" class="img1" />
-        <div class="person">
-          <h5>{{ name }}</h5>
+          <h5>{{ group.group.name }}</h5>
           <p>{{ msg }}</p>
         </div>
       </div>
@@ -29,16 +21,44 @@
 
 <script>
 import { Options, Vue } from "vue-class-component";
+import gql from "graphql-tag";
+import { mapState } from "vuex";
+
 @Options({
   data() {
     return {
+      allgroupUserByUserId: [],
+
       name: "mohan",
       msg: "msg",
       image:
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
   },
-  mounted() {},
+  computed: {
+    ...mapState(["user"]),
+  },
+  apollo: {
+    allgroupUserByUserId: {
+      query: gql`
+        query ($userId: String!) {
+          allgroupUserByUserId(userId: $userId) {
+            group {
+              name
+              id
+            }
+          }
+        }
+      `,
+      variables: {
+        userId: "35adc94f-d6b1-484d-95a6-43de91eccf1c",
+      },
+    },
+  },
+
+  mounted() {
+    console.log(this.allgroupUserByUserId, "==");
+  },
 })
 export default class Groups extends Vue {}
 </script>
