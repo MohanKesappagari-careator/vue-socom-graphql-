@@ -1,16 +1,18 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-5 side" v-if="!$store.state.profileclick">
+  <div class="full">
+    <div class="first">
+      <div class="" v-if="!$store.state.profileclick">
         <sidebar />
       </div>
-      <div class="col-md-5 side" v-if="$store.state.profileclick">
+      <div class="" v-if="$store.state.profileclick">
         <Profile />
       </div>
-      <div class="col-md-7" v-if="!$store.state.groupclick">
+    </div>
+    <div class="second">
+      <div class="" v-if="!$store.state.groupclick">
         <Main />
       </div>
-      <div class="col-md-7" v-if="$store.state.groupclick">
+      <div class="" v-if="$store.state.groupclick">
         <startup />
       </div>
     </div>
@@ -40,11 +42,20 @@ export default class Home extends Vue {}
 </script>
 
 <style>
-.container-fluid {
+.full {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
   overflow: hidden;
 }
-
-.side {
+.first {
+  width: 30vw;
+  height: 100vh;
+  overflow-y: scroll;
+}
+.second {
+  width: 70vw;
+  height: 100vh;
   overflow: hidden;
 }
 </style>
