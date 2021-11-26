@@ -4,7 +4,7 @@
     v-for="(group, index) of allgroupUserByUserId"
     :key="index"
   >
-    <div class="inside">
+    <div class="inside" @click="$store.commit('group', group.group)">
       <div class="start">
         <img :src="image" alt="" class="img1" />
         <div class="person">
@@ -22,13 +22,13 @@
 <script>
 import { Options, Vue } from "vue-class-component";
 import gql from "graphql-tag";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 @Options({
   data() {
     return {
       allgroupUserByUserId: [],
-
+      userId: "",
       name: "mohan",
       msg: "msg",
       image:
@@ -55,9 +55,18 @@ import { mapState } from "vuex";
       },
     },
   },
+  methods: {
+    ...mapMutations(["group"]),
+  },
 
   mounted() {
+    let user = localStorage.getItem("userId");
+    this.userId = user;
     console.log(this.allgroupUserByUserId, "==");
+  },
+  created() {
+    let user = localStorage.getItem("userId");
+    this.userId = user;
   },
 })
 export default class Groups extends Vue {}

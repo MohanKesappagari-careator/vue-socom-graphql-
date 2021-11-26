@@ -149,9 +149,9 @@ import gql from "graphql-tag";
   methods: {
     ...mapMutations(["auth"]),
 
-    login() {
+    async login() {
       console.log(this.email, this.password);
-      this.$apollo
+      await this.$apollo
         .mutate({
           mutation: gql`
             mutation ($login: LoginInput!) {
@@ -165,15 +165,22 @@ import gql from "graphql-tag";
             login: { email: this.email, password: this.password },
           },
         })
-        .then((data) => {
+        .then(async (data) => {
           console.log(data);
-          this.auth(data.data.login);
-          localStorage.setItem("token", data.data.login.token);
+          await this.auth(data.data.login);
+          await this.adduserTolocalStroage(
+            data.data.login.token,
+            data.data.login.userId
+          );
           this.$router.push("/home");
         })
         .catch((e) => {
           console.log(e);
         });
+    },
+    async adduserTolocalStroage(token, userId) {
+      await localStorage.setItem("token", token);
+      await localStorage.setItem("userId", userId);
     },
   },
 })

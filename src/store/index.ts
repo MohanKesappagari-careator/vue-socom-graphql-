@@ -7,6 +7,10 @@ export const store = createStore({
         token: "",
         userId: "",
       },
+      groupId: "",
+      groupclick: true,
+      groupName: "",
+      profileclick: false,
     };
   },
   mutations: {
@@ -14,6 +18,14 @@ export const store = createStore({
       state.user.userId = payload.userId;
       state.user.token = payload.token;
       console.log(payload, "..");
+    },
+    group(state, payload) {
+      state.groupId = payload.id;
+      state.groupName = payload.name;
+      state.groupclick = false;
+    },
+    profile(state) {
+      state.profileclick = !state.profileclick;
     },
   },
 });

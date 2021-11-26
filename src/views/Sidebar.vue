@@ -1,9 +1,9 @@
 <template>
   <div class="sidebar">
     <div class="top">
-      <img :src="image" alt="" class="img" />
+      <img :src="image" alt="" class="img" @click="$store.commit('profile')" />
       <div class="icon">
-        <i class="fas fa-cog fa-2x"></i>
+        <i class="fas fa-ellipsis-v fa-lg"></i>
       </div>
     </div>
     <div class="notification">
@@ -75,6 +75,7 @@ export default class Sidebar extends Vue {}
   height: 3rem;
   border-radius: 50%;
   border: blue;
+  cursor: pointer;
 }
 .top {
   display: flex;
@@ -86,8 +87,8 @@ export default class Sidebar extends Vue {}
 .fa-bell-slash {
   color: white;
 }
-.fa-cog {
-  color: white;
+.fa-ellipsis-v {
+  color: rgb(201, 194, 194);
 }
 .notification {
   display: flex;
