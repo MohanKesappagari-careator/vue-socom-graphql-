@@ -1,10 +1,10 @@
 <template>
-  <div
+    <div
     class="group"
     v-for="(group, index) of allgroupUserByUserId"
     :key="index"
   >
-    <div class="inside" @click="$store.commit('group', group.group)">
+    <div class="inside" @click="()=>{this.$router.push(`/home/${group.group.id}`);$store.commit('group', group.group)}">
       <div class="start">
         <img :src="image" alt="" class="img1" />
         <div class="person">
@@ -17,42 +17,7 @@
       </div>
     </div>
   </div>
-  <div
-    class="group"
-    v-for="(group, index) of allgroupUserByUserId"
-    :key="index"
-  >
-    <div class="inside" @click="$store.commit('group', group.group)">
-      <div class="start">
-        <img :src="image" alt="" class="img1" />
-        <div class="person">
-          <h5>{{ group.group.name }}</h5>
-          <p>{{ msg }}</p>
-        </div>
-      </div>
-      <div class="end">
-        <p>5pm</p>
-      </div>
-    </div>
-  </div>
-  <div
-    class="group"
-    v-for="(group, index) of allgroupUserByUserId"
-    :key="index"
-  >
-    <div class="inside" @click="$store.commit('group', group.group)">
-      <div class="start">
-        <img :src="image" alt="" class="img1" />
-        <div class="person">
-          <h5>{{ group.group.name }}</h5>
-          <p>{{ msg }}</p>
-        </div>
-      </div>
-      <div class="end">
-        <p>5pm</p>
-      </div>
-    </div>
-  </div>
+    
 </template>
 
 <script>

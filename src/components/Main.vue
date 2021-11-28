@@ -120,7 +120,31 @@
 
 <script>
 import { Options, Vue } from "vue-class-component";
+import { useQuery, useResult } from "@vue/apollo-composable";
+import gql from "graphql-tag";
+
 @Options({
+  setup() {
+    const { result } = useQuery(
+      gql`
+        query ($groupId: String!) {
+          groupposts(groupId: $groupId) {
+            postTitle
+            isBuy
+            description
+            type
+            createdAt
+          }
+        }
+      `,
+      () => ({
+        groupId: this.$store.state.groupId,
+      })
+    );
+    watch(() => {
+      console.log(result.value, "??");
+    });
+  },
   data() {
     return {
       image:
@@ -173,5 +197,6 @@ export default class Main extends Vue {}
 .post {
   position: relative;
   margin-top: 5rem;
+  margin-bottom: 4rem;
 }
 </style>
