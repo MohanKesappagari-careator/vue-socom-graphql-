@@ -10,14 +10,14 @@
     <div class="username">
       <p>Your name</p>
 
-      <div class="name" v-if="!edit">
-        <h6>{{ name }}</h6>
-        <i class="fas fa-user-edit edit" @click="editclick()"></i>
+      <div class="name" v-if="!nameedit">
+        <h6>{{ username }}</h6>
+        <i class="fas fa-user-edit edit" @click="editname()"></i>
       </div>
 
-      <div class="name" v-if="edit">
-        <input type="text" v-model="name" class="input1" />
-        <i class="fas fa-check check" @click="save()"></i>
+      <div class="name" v-if="nameedit">
+        <input type="text" v-model="username" class="input1" />
+        <i class="fas fa-check check" @click="savename()"></i>
       </div>
     </div>
 
@@ -30,51 +30,112 @@
     <div class="username">
       <p>Your Email</p>
 
-      <div class="name" v-if="!edit">
+      <div class="name" v-if="!emailedit">
         <h6>{{ email }}</h6>
-        <i class="fas fa-user-edit edit" @click="editclick()"></i>
+        <i class="fas fa-user-edit edit" @click="editemail()"></i>
       </div>
 
-      <div class="name" v-if="edit">
+      <div class="name" v-if="emailedit">
         <input type="text" v-model="email" class="input1" />
-        <i class="fas fa-check check" @click="save()"></i>
+        <i class="fas fa-check check" @click="saveemail()"></i>
       </div>
     </div>
     <div class="username">
       <p>Your Phonenumber</p>
 
-      <div class="name" v-if="!edit">
-        <h6>{{ phone }}</h6>
-        <i class="fas fa-user-edit edit" @click="editclick()"></i>
+      <div class="name" v-if="!phonenumberedit">
+        <h6>{{ phonenumber }}</h6>
+        <i class="fas fa-user-edit edit" @click="editphonenumber()"></i>
       </div>
 
-      <div class="name" v-if="edit">
-        <input type="text" v-model="phone" class="input1" />
-        <i class="fas fa-check check" @click="save()"></i>
+      <div class="name" v-if="phonenumberedit">
+        <input type="text" v-model="phonenumber" class="input1" />
+        <i class="fas fa-check check" @click="savephonenumber()"></i>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import gql from "graphql-tag";
 import { Options, Vue } from "vue-class-component";
+import { mapState } from "vuex";
 @Options({
   data() {
     return {
-      edit: false,
-      name: "K Mohan",
-      email: "mohan@gmail.com",
-      phone: "8074769539",
+      user: {},
+      username: "mohan",
+      email: "m@gmail.com",
+      phonenumber: "8",
+      nameedit: false,
+      emailedit: false,
+      phonenumberedit: false,
+
       image:
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
   },
-  methods: {
-    editclick() {
-      this.edit = true;
+  computed: {
+    ...mapState(["currentuser"]),
+    userId: function () {
+      return localStorage.getItem("userId");
     },
-    save() {
-      this.edit = false;
+  },
+  apollo: {
+    user: {
+      query: gql`
+        query ($userId: String!) {
+          user(id: $userId) {
+            username
+            email
+            address {
+              phonenumber
+            }
+          }
+        }
+      `,
+      variables() {
+        return {
+          userId: this.userId,
+        };
+      },
+      update(data) {
+        console.log(data.user, "data");
+        this.username = data.user.username;
+        this.email = data.user.email;
+        this.phonenumber = data.user.address[0].phonenumber;
+        return {};
+      },
+    },
+  },
+
+  async mounted() {
+    console.log(this.user, "user");
+  },
+  methods: {
+    editname() {
+      console.log("click");
+      this.nameedit = true;
+    },
+    savename() {
+      this.nameedit = false;
+    },
+    editemail() {
+      this.emailedit = true;
+    },
+    saveemail() {
+      this.emailedit = false;
+    },
+    editphonenumber() {
+      this.phonenumberedit = true;
+    },
+    savephonenumber() {
+      this.phonenumberedit = false;
+    },
+    async userdata() {
+      await this.user((val) => {
+        this.name = val.name;
+      });
     },
   },
 })

@@ -19,7 +19,9 @@
         <input type="text" placeholder="enter text" class="input" />
       </div>
     </div>
-    <Groups />
+    <div class="ff">
+      <Groups />
+    </div>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="full">
     <div class="first">
-      <div class="" v-if="!$store.state.profileclick">
+      <div class="first-1" v-if="!$store.state.profileclick">
         <sidebar />
       </div>
       <div class="" v-if="$store.state.profileclick">
@@ -53,9 +53,10 @@ export default class Home extends Vue {}
   height: 100vh;
   overflow-y: scroll;
 }
+
 .second {
   width: 70vw;
   height: 100vh;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 </style>
