@@ -63,7 +63,16 @@
               </button>
               <p class="small fw-bold mt-2 pt-1 mb-0">
                 Don't have an account?
-                <a href="#!" class="link-danger">Register</a>
+                <a
+                  class="link-danger"
+                  @click="
+                    () => {
+                      this.$router.push('/register');
+                    }
+                  "
+                  style="cursor: pointer"
+                  >Register</a
+                >
               </p>
             </div>
           </form>

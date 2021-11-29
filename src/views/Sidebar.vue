@@ -7,10 +7,30 @@
       </div>
     </div>
     <div class="notification">
-      <i class="fas fa-bell-slash fa-2x"></i>
-      <div class="msg">
-        <h5>Get notified of new messages</h5>
-        <p>Turn on desktop notifications</p>
+      <div v-if="!creategroup">
+        <h5>Create Group</h5>
+        <div class="msg">
+          <button class="btn btn-success" @click="publicgroup()">Public</button>
+          <button class="btn btn-success" @click="privategroup()">
+            Private
+          </button>
+        </div>
+      </div>
+      <div v-if="creategroup">
+        <h5>You Creating {{ grouptype }} Group</h5>
+        <div class="name1">
+          <input type="text" class="input1" v-model="name" />
+          <i
+            class="fas fa-check check"
+            style="color: blue; margin-left: 0.5rem"
+            @click="createGroup()"
+          ></i>
+          <i
+            class="fas fa-times check"
+            style="color: red"
+            @click="cancel()"
+          ></i>
+        </div>
       </div>
     </div>
     <div class="search">
@@ -26,11 +46,15 @@
 </template>
 
 <script>
+import gql from "graphql-tag";
 import { Vue, Options } from "vue-class-component";
 import Groups from "../components/Groups";
 @Options({
   data() {
     return {
+      creategroup: false,
+      grouptype: "",
+      name: "",
       image:
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
@@ -38,11 +62,55 @@ import Groups from "../components/Groups";
   components: {
     Groups,
   },
+  methods: {
+    publicgroup() {
+      this.grouptype = "public";
+      this.creategroup = true;
+    },
+    privategroup() {
+      this.grouptype = "private";
+      this.creategroup = true;
+    },
+    cancel() {
+      this.grouptype = "";
+      this.creategroup = false;
+    },
+    async createGroup() {
+      await this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation ($createGroupInput: CreateGroupInput!) {
+              createGroup(createGroupInput: $createGroupInput) {
+                id
+              }
+            }
+          `,
+          variables: {
+            createGroupInput: {
+              name: this.name,
+              type: this.grouptype,
+            },
+          },
+        })
+        .then(() => {})
+        .catch((e) => console.log(e));
+      //await this.$apollo.queries.allgroupUserByUserId.refetch();
+
+      this.name = "";
+      this.type = "";
+      this.creategroup = false;
+    },
+  },
 })
 export default class Sidebar extends Vue {}
 </script>
 
 <style>
+.name1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .search {
   padding: 1rem;
   background: rgb(231, 239, 240);
@@ -67,7 +135,13 @@ export default class Sidebar extends Vue {}
   color: rgb(196, 189, 189);
 }
 .msg {
-  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.btn {
+  margin-right: 0.8rem;
+  margin-bottom: 0.3rem;
 }
 .sidebar {
   width: 100%;
@@ -94,8 +168,7 @@ export default class Sidebar extends Vue {}
 }
 .notification {
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  background: rgb(151, 213, 238);
+  flex-direction: column;
 }
 </style>

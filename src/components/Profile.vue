@@ -113,12 +113,9 @@ import { mapState } from "vuex";
     },
   },
 
-  async mounted() {
-    console.log(this.user, "user");
-  },
+  async mounted() {},
   methods: {
     editname() {
-      console.log("click");
       this.nameedit = true;
     },
     async savename() {
@@ -127,29 +124,44 @@ import { mapState } from "vuex";
           mutation: gql`
             mutation ($updateUserInput: UpdateUserInput!) {
               updateUser(updateUserInput: $updateUserInput) {
+                username
                 __typename
               }
             }
           `,
-          variables() {
-            return {
-              updateUserInput: {
-                id: this.userId,
-                username: this.username,
-              },
-            };
+          variables: {
+            updateUserInput: { id: this.userId, username: this.username },
           },
         })
-        .then(() => {
+        .then((data) => {
           this.nameedit = false;
+          this.username = data.data.updateUser.username;
         })
         .catch((e) => console.log(e));
     },
     editemail() {
       this.emailedit = true;
     },
-    saveemail() {
-      this.emailedit = false;
+    async saveemail() {
+      await this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation ($updateUserInput: UpdateUserInput!) {
+              updateUser(updateUserInput: $updateUserInput) {
+                email
+                __typename
+              }
+            }
+          `,
+          variables: {
+            updateUserInput: { id: this.userId, email: this.email },
+          },
+        })
+        .then((data) => {
+          this.emailedit = false;
+          this.email = data.data.updateUser.email;
+        })
+        .catch((e) => console.log(e));
     },
     // editphonenumber() {
     //   this.phonenumberedit = true;

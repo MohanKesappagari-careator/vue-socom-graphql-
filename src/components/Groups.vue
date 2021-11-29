@@ -1,23 +1,35 @@
 <template>
+  <div class="" v-if="allgroupUserByUserId.length !== 0">
     <div
-    class="group"
-    v-for="(group, index) of allgroupUserByUserId"
-    :key="index"
-  >
-    <div class="inside" @click="()=>{this.$router.push(`/home/${group.group.id}`);$store.commit('group', group.group)}">
-      <div class="start">
-        <img :src="image" alt="" class="img1" />
-        <div class="person">
-          <h5>{{ group.group.name }}</h5>
-          <p>{{ msg }}</p>
+      class="group"
+      v-for="(group, index) of allgroupUserByUserId"
+      :key="index"
+    >
+      <div
+        class="inside"
+        @click="
+          () => {
+            this.$router.push(`/home/${group.group.id}`);
+            $store.commit('group', group.group);
+          }
+        "
+      >
+        <div class="start">
+          <img :src="image" alt="" class="img1" />
+          <div class="person">
+            <h5>{{ group.group.name }}</h5>
+            <p>{{ msg }}</p>
+          </div>
         </div>
-      </div>
-      <div class="end">
-        <p>5pm</p>
+        <div class="end">
+          <p>5pm</p>
+        </div>
       </div>
     </div>
   </div>
-    
+  <div class="" v-if="allgroupUserByUserId.length === 0">
+    <p>no groups create</p>
+  </div>
 </template>
 
 <script>
@@ -29,7 +41,6 @@ import { mapState, mapMutations } from "vuex";
   data() {
     return {
       allgroupUserByUserId: [],
-      userId: "",
       name: "mohan",
       msg: "msg",
       image:
@@ -37,7 +48,10 @@ import { mapState, mapMutations } from "vuex";
     };
   },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(["currentuser"]),
+    userId: function () {
+      return localStorage.getItem("userId");
+    },
   },
   apollo: {
     allgroupUserByUserId: {
@@ -51,8 +65,10 @@ import { mapState, mapMutations } from "vuex";
           }
         }
       `,
-      variables: {
-        userId: "35adc94f-d6b1-484d-95a6-43de91eccf1c",
+      variables() {
+        return {
+          userId: this.userId,
+        };
       },
     },
   },
@@ -61,8 +77,6 @@ import { mapState, mapMutations } from "vuex";
   },
 
   mounted() {
-    let user = localStorage.getItem("userId");
-    this.userId = user;
     console.log(this.allgroupUserByUserId, "==");
   },
   created() {

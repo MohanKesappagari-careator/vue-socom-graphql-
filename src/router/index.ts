@@ -3,7 +3,7 @@ import Login from "../components/Login.vue";
 import Main from "../components/Main.vue";
 import Home1 from "../views/Home1.vue";
 import Home2 from "../views/Home2.vue";
-
+import Register from '../components/Register.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -20,6 +20,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "Home2",
     component: Home2,
   },
+  {
+    path:"/register",
+    name:"Register",
+    component:Register
+  }
 ];
 
 const router = createRouter({

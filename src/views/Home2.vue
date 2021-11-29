@@ -53,5 +53,6 @@ export default class Home2 extends Vue {}
   width: 70vw;
   height: 100vh;
   overflow-y: scroll;
+  background: #ece5dd;
 }
 </style>
