@@ -40,7 +40,7 @@
         <i class="fas fa-check check" @click="saveemail()"></i>
       </div>
     </div>
-    <div class="username">
+    <!-- <div class="username">
       <p>Your Phonenumber</p>
 
       <div class="name" v-if="!phonenumberedit">
@@ -52,7 +52,7 @@
         <input type="text" v-model="phonenumber" class="input1" />
         <i class="fas fa-check check" @click="savephonenumber()"></i>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -64,12 +64,12 @@ import { mapState } from "vuex";
   data() {
     return {
       user: {},
-      username: "mohan",
-      email: "m@gmail.com",
-      phonenumber: "8",
+      username: "update name",
+      email: "update email",
+      phonenumber: "update phonenumber",
       nameedit: false,
       emailedit: false,
-      phonenumberedit: false,
+      //phonenumberedit: false,
 
       image:
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
@@ -103,7 +103,11 @@ import { mapState } from "vuex";
         console.log(data.user, "data");
         this.username = data.user.username;
         this.email = data.user.email;
-        this.phonenumber = data.user.address[0].phonenumber;
+        // if (data.user.address.length !== 0) {
+        //   this.phonenumber = data.user?.address[0]?.phonenumber;
+        // } else {
+        //   this.phonenumber = "Not Available";
+        // }
         return {};
       },
     },
@@ -117,8 +121,29 @@ import { mapState } from "vuex";
       console.log("click");
       this.nameedit = true;
     },
-    savename() {
-      this.nameedit = false;
+    async savename() {
+      await this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation ($updateUserInput: UpdateUserInput!) {
+              updateUser(updateUserInput: $updateUserInput) {
+                __typename
+              }
+            }
+          `,
+          variables() {
+            return {
+              updateUserInput: {
+                id: this.userId,
+                username: this.username,
+              },
+            };
+          },
+        })
+        .then(() => {
+          this.nameedit = false;
+        })
+        .catch((e) => console.log(e));
     },
     editemail() {
       this.emailedit = true;
@@ -126,12 +151,12 @@ import { mapState } from "vuex";
     saveemail() {
       this.emailedit = false;
     },
-    editphonenumber() {
-      this.phonenumberedit = true;
-    },
-    savephonenumber() {
-      this.phonenumberedit = false;
-    },
+    // editphonenumber() {
+    //   this.phonenumberedit = true;
+    // },
+    // savephonenumber() {
+    //   this.phonenumberedit = false;
+    // },
     async userdata() {
       await this.user((val) => {
         this.name = val.name;
