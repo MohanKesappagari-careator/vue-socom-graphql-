@@ -3,10 +3,30 @@
     <div class="top">
       <img :src="image" alt="" class="img" @click="$store.commit('profile')" />
       <div class="icon">
-        <i class="fas fa-ellipsis-v fa-lg"></i>
+        <i
+          class="fas fa-ellipsis-v fa-lg"
+          style="cursor: pointer"
+          @click="cgroup()"
+        ></i>
       </div>
     </div>
-    <div class="notification">
+    <div class="card newgroup" style="width: 12vw" v-if="creategroup">
+      <div class="p">
+        <p
+          style="margin-top: 0.5rem"
+          @click="$store.commit('grouppubliccreate')"
+        >
+          New Public Group
+        </p>
+      </div>
+      <div class="p">
+        <p @click="$store.commit('groupprivatecreate')">New Private Group</p>
+      </div>
+      <div class="p">
+        <p>Log Out</p>
+      </div>
+    </div>
+    <!-- <div class="notification">
       <div v-if="!creategroup">
         <h5>Create Group</h5>
         <div class="msg">
@@ -32,7 +52,7 @@
           ></i>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="search">
       <div class="in">
         <i class="fas fa-search ic"></i>
@@ -63,14 +83,11 @@ import Groups from "../components/Groups";
     Groups,
   },
   methods: {
-    publicgroup() {
-      this.grouptype = "public";
-      this.creategroup = true;
+    cgroup() {
+      console.log("ccs");
+      this.creategroup = !this.creategroup;
     },
-    privategroup() {
-      this.grouptype = "private";
-      this.creategroup = true;
-    },
+
     cancel() {
       this.grouptype = "";
       this.creategroup = false;
@@ -95,7 +112,6 @@ import Groups from "../components/Groups";
         .then(() => {})
         .catch((e) => console.log(e));
       //await this.$apollo.queries.allgroupUserByUserId.refetch();
-
       this.name = "";
       this.type = "";
       this.creategroup = false;
@@ -106,6 +122,23 @@ export default class Sidebar extends Vue {}
 </script>
 
 <style>
+.p {
+  width: 100%;
+  text-align: center;
+}
+
+.p:hover {
+  cursor: pointer;
+  background: rgb(243, 241, 241);
+}
+.newgroup {
+  position: absolute;
+  margin-left: 14rem;
+  margin-top: -1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .name1 {
   display: flex;
   justify-content: space-between;

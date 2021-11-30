@@ -14,6 +14,8 @@ export const store = createStore({
       groupclick: true,
       groupName: "",
       profileclick: false,
+      createGroup: false,
+      grouptype: "",
     };
   },
   mutations: {
@@ -29,6 +31,18 @@ export const store = createStore({
     },
     profile(state) {
       state.profileclick = !state.profileclick;
+    },
+    grouppubliccreate(state) {
+      state.createGroup = !state.createGroup;
+      state.grouptype = "public";
+    },
+    groupprivatecreate(state) {
+      state.createGroup = !state.createGroup;
+      state.grouptype = "private";
+    },
+    cancel(state) {
+      state.createGroup = !state.createGroup;
+      state.grouptype = "";
     },
     userdetails(state, payload) {
       console.log(payload, "p");

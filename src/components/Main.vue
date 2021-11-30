@@ -4,7 +4,7 @@
       <div class="user">
         <img :src="image" alt="" class="img" />
         <div class="userd">
-          <h5>{{ $store.state.groupName }}</h5>
+          <h5>{{ groupname }}</h5>
 
           <p
             style="
@@ -81,7 +81,7 @@ import moment from "moment";
       group: [],
       postdata: [],
       groupusers: [],
-
+      groupname: this.$store.state.groupName || "",
       image:
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
@@ -138,6 +138,7 @@ import moment from "moment";
       query: gql`
         query Group($groupId: String!) {
           group(id: $groupId) {
+            name
             groupusers {
               user {
                 username
@@ -152,6 +153,7 @@ import moment from "moment";
         };
       },
       update(data) {
+        this.groupname = data.group.name;
         data.group.groupusers.map((val) => {
           this.groupusers.push(val.user.username);
         });
@@ -164,6 +166,7 @@ import moment from "moment";
   },
   watch: {
     $route(to, from) {
+      this.groupusers = [];
       this.$apollo.queries.groupposts.refetch();
       this.$apollo.queries.group.refetch();
     },
