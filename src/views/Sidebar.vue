@@ -11,18 +11,13 @@
       </div>
     </div>
     <div class="card newgroup" style="width: 12vw" v-if="creategroup">
-      <div class="p">
-        <p
-          style="margin-top: 0.5rem"
-          @click="$store.commit('grouppubliccreate')"
-        >
-          New Public Group
-        </p>
+      <div class="p" @click="$store.commit('grouppubliccreate')">
+        <p style="margin-top: 0.5rem">New Public Group</p>
       </div>
-      <div class="p">
-        <p @click="$store.commit('groupprivatecreate')">New Private Group</p>
+      <div class="p" @click="$store.commit('groupprivatecreate')">
+        <p>New Private Group</p>
       </div>
-      <div class="p">
+      <div class="p" @click="logout()">
         <p>Log Out</p>
       </div>
     </div>
@@ -91,6 +86,10 @@ import Groups from "../components/Groups";
     cancel() {
       this.grouptype = "";
       this.creategroup = false;
+    },
+    async logout() {
+      await localStorage.clear();
+      await this.$router.push("/");
     },
     async createGroup() {
       await this.$apollo
