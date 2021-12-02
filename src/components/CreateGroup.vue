@@ -54,9 +54,7 @@ import { Options, Vue } from "vue-class-component";
         .catch((e) => console.log(e));
     },
   },
-  mounted() {
-    console.log(this.$apollo, "p");
-  },
+  mounted() {},
 })
 export default class CreateGroup extends Vue {}
 </script>

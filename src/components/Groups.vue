@@ -48,7 +48,9 @@ import { mapState, mapMutations } from "vuex";
     };
   },
   computed: {
-    ...mapState(["currentuser"]),
+    createGroup: function () {
+      return this.$store.state.createGroup;
+    },
     userId: function () {
       return localStorage.getItem("userId");
     },
@@ -70,12 +72,21 @@ import { mapState, mapMutations } from "vuex";
           userId: this.userId,
         };
       },
+      fetchPolicy: "no-cache",
     },
   },
   methods: {
     ...mapMutations(["group"]),
   },
-
+  watch: {
+    createGroup(newValue) {
+      console.log(newValue);
+      if (newValue == false) {
+        console.log("fectch now");
+        this.$apollo.queries.allgroupUserByUserId.refetch();
+      }
+    },
+  },
   mounted() {
     console.log(this.allgroupUserByUserId, "==");
   },
