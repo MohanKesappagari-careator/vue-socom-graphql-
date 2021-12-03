@@ -10,6 +10,7 @@
           />
         </div>
         <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+          <p class="error" v-if="error !== ''">{{ error }}</p>
           <form @submit.prevent="login">
             <!-- Email input -->
             <div class="form-outline mb-4">
@@ -34,7 +35,6 @@
                 placeholder="Enter password"
                 v-model="password"
               />
-              <label class="form-label" for="form3Example4">Password</label>
             </div>
 
             <div class="d-flex justify-content-between align-items-center">
@@ -91,6 +91,7 @@ import gql from "graphql-tag";
     return {
       email: "",
       password: "",
+      error: "",
     };
   },
   components: {},
@@ -99,6 +100,7 @@ import gql from "graphql-tag";
 
     async login() {
       console.log(this.email, this.password);
+
       await this.$apollo
         .mutate({
           mutation: gql`
@@ -123,6 +125,7 @@ import gql from "graphql-tag";
           this.$router.push("/home");
         })
         .catch((e) => {
+          this.error = e.message.toString();
           console.log(e);
         });
     },
@@ -135,4 +138,8 @@ import gql from "graphql-tag";
 export default class Login extends Vue {}
 </script>
 
-<style></style>
+<style>
+.error {
+  color: red;
+}
+</style>

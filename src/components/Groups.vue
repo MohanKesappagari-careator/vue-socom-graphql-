@@ -18,7 +18,10 @@
           <img :src="image" alt="" class="img1" />
           <div class="person">
             <h5>{{ group.group.name }}</h5>
-            <p>{{ msg }}</p>
+            <p v-if="group.group.post.length !== 0">
+              {{ group.group.post[group.group.post.length - 1].postTitle }}
+            </p>
+            <p v-if="group.group.post.length == 0">{{ msg }}</p>
           </div>
         </div>
         <div class="end">
@@ -41,8 +44,9 @@ import { mapState, mapMutations } from "vuex";
   data() {
     return {
       allgroupUserByUserId: [],
+
       name: "mohan",
-      msg: "msg",
+      msg: "No Posts",
       image:
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
@@ -54,6 +58,9 @@ import { mapState, mapMutations } from "vuex";
     userId: function () {
       return localStorage.getItem("userId");
     },
+    d: function () {
+      return this.$store.state.deletegroup;
+    },
   },
   apollo: {
     allgroupUserByUserId: {
@@ -63,6 +70,9 @@ import { mapState, mapMutations } from "vuex";
             group {
               name
               id
+              post {
+                postTitle
+              }
             }
           }
         }
@@ -79,6 +89,11 @@ import { mapState, mapMutations } from "vuex";
     ...mapMutations(["group"]),
   },
   watch: {
+    d(newValue) {
+      if (newValue == true)
+        return this.$apollo.queries.allgroupUserByUserId.refetch();
+    },
+
     createGroup(newValue) {
       console.log(newValue);
       if (newValue == false) {

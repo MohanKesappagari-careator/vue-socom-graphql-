@@ -19,12 +19,60 @@
           </p>
         </div>
       </div>
-      <div class="icon">
+      <div class="icon" @click="open1()" style="cursor: pointer">
         <i class="fas fa-ellipsis-v fa-lg"></i>
       </div>
     </div>
+    <div class="card groupedit" v-if="groupedit">
+      <div class="p" style="margin-top: 0.4rem">
+        <p>Group Info</p>
+      </div>
+      <div class="p">
+        <p>Update</p>
+      </div>
+      <div class="p" @click="deletegroup()">
+        <p>Delete</p>
+      </div>
+    </div>
 
-    <div class="post">
+    <div class="post" v-if="onebytwo">
+      <div
+        :class="post.user.id === userId ? 'card3' : 'card1'"
+        v-for="(post, index) of postdata"
+        :key="index"
+      >
+        <div class="postimage">
+          <p style="color: #128c7e">{{ post.user.username }}</p>
+          <p>
+            <strong class="category">
+              {{ post.category.parent.parent.name }}
+              <i class="fas fa-angle-double-right"></i>
+              {{ post.category.parent.name }}
+              <i class="fas fa-angle-double-right"></i> {{ post.category.name }}
+            </strong>
+          </p>
+          <img
+            src="https://mdbootstrap.com/img/new/standard/nature/111.jpg"
+            alt=""
+            style="width: 19rem; height: 8rem"
+          />
+        </div>
+        <div class="postcontent">
+          <p><strong>Title :</strong> {{ post.postTitle }}</p>
+
+          <p>
+            <strong> Description: </strong>
+            {{ post.description }}
+          </p>
+          <p><strong>Is Buy :</strong> {{ post.isBuy }}</p>
+          <p>
+            <strong>Posted At : </strong
+            >{{ moment(post.createdAt).format("DD-MM-YYYY") }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="post" v-if="!onebytwo">
       <div
         :class="post.user.id === userId ? 'card2' : 'card1'"
         v-for="(post, index) of postdata"
@@ -77,11 +125,13 @@ import moment from "moment";
 @Options({
   data() {
     return {
+      onebytwo: false,
       groupposts: [],
       group: [],
       postdata: [],
       groupusers: [],
       groupname: this.$store.state.groupName || "",
+      groupedit: false,
       image:
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
@@ -89,6 +139,31 @@ import moment from "moment";
 
   created: function () {
     this.moment = moment;
+  },
+  methods: {
+    open1() {
+      this.groupedit = !this.groupedit;
+    },
+    async deletegroup() {
+      await this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation ($removeGroupId: String!) {
+              removeGroup(id: $removeGroupId) {
+                __typename
+              }
+            }
+          `,
+          variables: {
+            removeGroupId: this.id,
+          },
+        })
+        .then(() => {
+          this.$store.commit("dgroup");
+          this.$router.push("/home");
+        })
+        .catch((e) => console.log(e));
+    },
   },
   computed: {
     id: function () {
@@ -176,6 +251,21 @@ export default class Main extends Vue {}
 </script>
 
 <style>
+.icon:active,
+.icon:focus {
+  box-shadow: 0 0 5px 5px #666;
+}
+.groupedit {
+  position: absolute;
+  z-index: 200;
+  width: 11vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  right: 0;
+  margin-right: 1rem;
+  margin-top: -4rem;
+}
 .groupuser {
   display: inline;
 }
@@ -208,6 +298,19 @@ export default class Main extends Vue {}
   display: flex;
   flex-direction: column;
   margin-left: 37rem;
+  margin-top: 1rem;
+  border-top-right-radius: 0.7rem;
+  border-top-left-radius: 0.7rem;
+  border-bottom-right-radius: 0rem;
+  border-bottom-left-radius: 0.7rem;
+}
+.card3 {
+  background: #dcf8c6;
+  width: 20rem;
+  height: 24rem;
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
   margin-top: 1rem;
   border-top-right-radius: 0.7rem;
   border-top-left-radius: 0.7rem;

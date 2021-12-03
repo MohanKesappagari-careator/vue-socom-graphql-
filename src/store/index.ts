@@ -16,6 +16,7 @@ export const store = createStore({
       profileclick: false,
       createGroup: false,
       grouptype: "",
+      deletegroup: false,
     };
   },
   mutations: {
@@ -46,6 +47,9 @@ export const store = createStore({
     },
     userdetails(state, payload) {
       console.log(payload, "p");
+    },
+    dgroup(state) {
+      state.deletegroup = !state.deletegroup;
     },
   },
 });
