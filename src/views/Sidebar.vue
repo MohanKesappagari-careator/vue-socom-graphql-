@@ -203,4 +203,8 @@ export default class Sidebar extends Vue {}
   align-items: center;
   flex-direction: column;
 }
+.ff {
+  overflow-y: scroll;
+  height: 31rem;
+}
 </style>

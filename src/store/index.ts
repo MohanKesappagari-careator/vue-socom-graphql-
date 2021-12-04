@@ -17,6 +17,8 @@ export const store = createStore({
       createGroup: false,
       grouptype: "",
       deletegroup: false,
+      updategroupname: false,
+      onebytwoo: false,
     };
   },
   mutations: {
@@ -50,6 +52,15 @@ export const store = createStore({
     },
     dgroup(state) {
       state.deletegroup = !state.deletegroup;
+    },
+    updateg(state) {
+      state.updategroupname = !state.updategroupname;
+    },
+    onebytwog(state) {
+      state.onebytwoo = false;
+    },
+    onebytwogg(state) {
+      state.onebytwoo = true;
     },
   },
 });

@@ -51,12 +51,12 @@ export default class Home extends Vue {}
 .first {
   width: 30vw;
   height: 100vh;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 
 .second {
   width: 70vw;
   height: 100vh;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 </style>

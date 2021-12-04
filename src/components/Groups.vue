@@ -11,6 +11,7 @@
           () => {
             this.$router.push(`/home/${group.group.id}`);
             $store.commit('group', group.group);
+            $store.commit('onebytwog');
           }
         "
       >
@@ -25,7 +26,14 @@
           </div>
         </div>
         <div class="end">
-          <p>5pm</p>
+          <p v-if="group.group.post.length !== 0">
+            {{
+              moment(
+                group.group.post[group.group.post.length - 1].createdAt
+              ).format("DD-MM-YYYY")
+            }}
+          </p>
+          <p v-if="group.group.post.length === 0"></p>
         </div>
       </div>
     </div>
@@ -38,8 +46,8 @@
 <script>
 import { Options, Vue } from "vue-class-component";
 import gql from "graphql-tag";
-import { mapState, mapMutations } from "vuex";
-
+import { mapMutations } from "vuex";
+import moment from "moment";
 @Options({
   data() {
     return {
@@ -51,6 +59,7 @@ import { mapState, mapMutations } from "vuex";
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
   },
+
   computed: {
     createGroup: function () {
       return this.$store.state.createGroup;
@@ -60,6 +69,9 @@ import { mapState, mapMutations } from "vuex";
     },
     d: function () {
       return this.$store.state.deletegroup;
+    },
+    u: function () {
+      return this.$store.state.updategroupname;
     },
   },
   apollo: {
@@ -72,6 +84,7 @@ import { mapState, mapMutations } from "vuex";
               id
               post {
                 postTitle
+                createdAt
               }
             }
           }
@@ -93,6 +106,10 @@ import { mapState, mapMutations } from "vuex";
       if (newValue == true)
         return this.$apollo.queries.allgroupUserByUserId.refetch();
     },
+    u(newValue) {
+      if (newValue == true)
+        return this.$apollo.queries.allgroupUserByUserId.refetch();
+    },
 
     createGroup(newValue) {
       console.log(newValue);
@@ -108,6 +125,7 @@ import { mapState, mapMutations } from "vuex";
   created() {
     let user = localStorage.getItem("userId");
     this.userId = user;
+    this.moment = moment;
   },
 })
 export default class Groups extends Vue {}
