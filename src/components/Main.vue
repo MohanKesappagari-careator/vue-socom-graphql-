@@ -15,7 +15,7 @@
               font-size: 0.8rem;
             "
           >
-            {{ groupusers.toString() }},
+            {{ groupusers.toString() }}
           </p>
         </div>
       </div>
@@ -44,7 +44,11 @@
       </div>
     </div>
     <div class="king">
-      <div class="post posti" v-if="onebytwo && !addpost" @click="onebytwoG()">
+      <div
+        class="post posti"
+        v-if="onebytwo && !addpost && !createpost"
+        @click="onebytwoG()"
+      >
         <div>
           <div
             :class="post.user.id === userId ? 'card3' : 'card1'"
@@ -84,7 +88,7 @@
           </div>
         </div>
       </div>
-      <div class="infog" v-if="onebytwo && !addpost">
+      <div class="infog" v-if="onebytwo && !addpost && !createpost">
         <h3 style="margin-left: 6rem; margin-top: 1rem">Group Info</h3>
         <div class="groupimg">
           <img :src="image" alt="" />
@@ -154,7 +158,7 @@
       </div>
     </div>
 
-    <div class="post" v-if="!onebytwo && !showpost && !addpost">
+    <div class="post" v-if="!onebytwo && !showpost && !addpost && !createpost">
       <div
         :class="post.user.id === userId ? 'card2' : 'card1'"
         v-for="(post, index) of postdata"
@@ -218,32 +222,41 @@
         </div>
       </div>
     </div>
-    <div class="post" v-if="addpost">
+    <div class="post" v-if="addpost && !createpost">
       <div class="lll">
-        <select class="form-select" @change="onChange($event)">
-          <option v-for="(cat, i) of dropdown1data" :value="cat.id" :key="i">
-            {{ cat.name }}
-          </option>
-        </select>
+        <div class="kkk">
+          <select class="form-select" @change="onChange($event)">
+            <option v-for="(cat, i) of dropdown1data" :value="cat.id" :key="i">
+              {{ cat.name }}
+            </option>
+          </select>
 
-        <select class="form-select" @change="onChange1($event)">
-          <option v-for="(cat, i) of dropdown2data" :value="cat.id" :key="i">
-            {{ cat.name }}
-          </option>
-        </select>
-        <select
-          class="form-select"
-          @change="onChange1($event)"
-          v-if="dropdown3data.length !== 0"
-        >
-          <option v-for="(cat, i) of dropdown3data" :value="cat.id" :key="i">
-            {{ cat.name }}
-          </option>
-        </select>
+          <select
+            class="form-select"
+            @change="onChange1($event)"
+            v-if="dropdown2data.length !== 0"
+          >
+            <option v-for="(cat, i) of dropdown2data" :value="cat.id" :key="i">
+              {{ cat.name }}
+            </option>
+          </select>
+          <select
+            class="form-select"
+            @change="onChange2($event)"
+            v-if="dropdown3data.length !== 0"
+          >
+            <option v-for="(cat, i) of dropdown3data" :value="cat.id" :key="i">
+              {{ cat.name }}
+            </option>
+          </select>
+          <button class="btn btn-primary" style="margin-top: 2rem">
+            Create Post
+          </button>
+        </div>
       </div>
     </div>
 
-    <div class="bottomnav">
+    <div class="bottomnav" v-if="!addpost && !createpost">
       <div class="user1">
         <input type="text" />
       </div>
@@ -292,10 +305,17 @@ import moment from "moment";
   },
   methods: {
     onChange(value) {
+      this.dropdown2data = [];
+      this.dropdown3data = [];
       this.dropdown = value.target.value;
       console.log(value.target.value, "_");
     },
     onChange1(value) {
+      this.dropdown3data = [];
+      this.dropdown = value.target.value;
+      console.log(value.target.value, "_");
+    },
+    onChange2(value) {
       this.dropdown = value.target.value;
       console.log(value.target.value, "_");
     },
@@ -415,6 +435,9 @@ import moment from "moment";
     },
     addpost: function () {
       return this.$store.state.addpost;
+    },
+    createpost: function () {
+      return this.$store.state.createpost;
     },
     dropdownnumber: function () {
       if (this.dropdown1data.length === 0) {
@@ -568,9 +591,19 @@ export default class Main extends Vue {}
 
 <style>
 .lll {
+  width: 31vw;
+  margin-left: 10rem;
+  margin-top: 5rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.kkk {
   display: flex;
   flex-direction: column;
+  padding: 1rem 1rem 2rem 2rem;
   width: 30vw;
+}
+.kkk select {
+  margin-top: 2rem;
 }
 .nn {
   width: 10rem;

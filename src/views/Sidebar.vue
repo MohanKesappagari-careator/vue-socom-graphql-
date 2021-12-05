@@ -51,7 +51,12 @@
     <div class="search">
       <div class="in">
         <i class="fas fa-search ic"></i>
-        <input type="text" placeholder="enter text" class="input" />
+        <input
+          type="text"
+          placeholder="enter text"
+          class="input"
+          v-model="$store.state.serachinput"
+        />
       </div>
     </div>
     <div class="ff">
@@ -69,13 +74,23 @@ import Groups from "../components/Groups";
     return {
       creategroup: false,
       grouptype: "",
-      name: "",
+
       image:
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
   },
   components: {
     Groups,
+  },
+  computed: {
+    serachinput: function () {
+      return this.$store.state.serachinput;
+    },
+  },
+  watch: {
+    serachinput(newValue) {
+      console.log(newValue);
+    },
   },
   methods: {
     cgroup() {

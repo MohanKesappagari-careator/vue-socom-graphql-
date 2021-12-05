@@ -1,5 +1,41 @@
 <template>
-  <div class="" v-if="allgroupUserByUserId.length !== 0">
+  <div class="" v-if="allgroupUserByUserId.length !== 0 && serach != ''">
+    <div class="group" v-for="(group, index) of searchByGroupName" :key="index">
+      <div
+        class="inside"
+        @click="
+          () => {
+            $store.commit('addpostt');
+            this.$router.push(`/home/${group.id}`);
+            $store.commit('group', group);
+            $store.commit('onebytwog');
+          }
+        "
+      >
+        <div class="start">
+          <img :src="image" alt="" class="img1" />
+          <div class="person">
+            <h5>{{ group.name }}</h5>
+            <p v-if="group.post.length !== 0">
+              {{ group.post[group.post.length - 1].postTitle }}
+            </p>
+            <p v-if="group.post.length == 0">{{ msg }}</p>
+          </div>
+        </div>
+        <div class="end">
+          <p v-if="group.post.length !== 0">
+            {{
+              moment(group.post[group.post.length - 1].createdAt).format(
+                "DD-MM-YYYY"
+              )
+            }}
+          </p>
+          <p v-if="group.post.length === 0"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="" v-if="allgroupUserByUserId.length !== 0 && serach == ''">
     <div
       class="group"
       v-for="(group, index) of allgroupUserByUserId"
@@ -9,6 +45,7 @@
         class="inside"
         @click="
           () => {
+            $store.commit('addpostt');
             this.$router.push(`/home/${group.group.id}`);
             $store.commit('group', group.group);
             $store.commit('onebytwog');
@@ -52,7 +89,7 @@ import moment from "moment";
   data() {
     return {
       allgroupUserByUserId: [],
-
+      searchByGroupName: [],
       name: "mohan",
       msg: "No Posts",
       image:
@@ -73,8 +110,30 @@ import moment from "moment";
     u: function () {
       return this.$store.state.updategroupname;
     },
+    serach: function () {
+      return this.$store.state.serachinput;
+    },
   },
   apollo: {
+    searchByGroupName: {
+      query: gql`
+        query ($serach: String!) {
+          searchByGroupName(serach: $serach) {
+            name
+            id
+            post {
+              postTitle
+              createdAt
+            }
+          }
+        }
+      `,
+      variables() {
+        return {
+          serach: this.serach,
+        };
+      },
+    },
     allgroupUserByUserId: {
       query: gql`
         query ($userId: String!) {
@@ -117,6 +176,9 @@ import moment from "moment";
         console.log("fectch now");
         this.$apollo.queries.allgroupUserByUserId.refetch();
       }
+    },
+    serach() {
+      this.$apollo.queries.searchByGroupName.refetch();
     },
   },
   mounted() {

@@ -19,11 +19,13 @@ export const store = createStore({
       deletegroup: false,
       updategroupname: false,
       onebytwoo: false,
-      addpost:false
+      addpost: false,
+      createpost: false,
+      search: true,
+      serachinput: "",
     };
   },
   mutations: {
-
     auth(state: any, payload) {
       state.currentuser.userId = payload.userId;
       state.currentuser.token = payload.token;
@@ -64,8 +66,23 @@ export const store = createStore({
     onebytwogg(state) {
       state.onebytwoo = true;
     },
-        addpostm(state){
-       state.addpost=!state.addpost
+    addpostm(state) {
+      state.addpost = !state.addpost;
+    },
+    addpostt(state) {
+      state.addpost = false;
+    },
+    createpostg(state) {
+      state.createpost = !state.createpost;
+    },
+    createpostt(state) {
+      state.createpost = false;
+    },
+    serachm(state) {
+      state.search = !state.serach;
+    },
+    serachinputm(state, payload) {
+      state.serachinput = payload;
     },
   },
 });
