@@ -178,7 +178,12 @@
             src="https://mdbootstrap.com/img/new/standard/nature/111.jpg"
             alt=""
             style="width: 19rem; height: 8rem; cursor: pointer"
-            @click="postdeatils(post.id)"
+            @click="
+              () => {
+                postdeatils(post.id);
+                $store.commit('showpostm');
+              }
+            "
           />
         </div>
         <div class="postcontent">
@@ -204,7 +209,12 @@
               src="https://mdbootstrap.com/img/new/standard/nature/111.jpg"
               alt=""
               style="width: 40rem; height: 15rem; cursor: pointer"
-              @click="postdeatils(post.id)"
+              @click="
+                () => {
+                  postdeatils(post.id);
+                  $store.commit('showpostt');
+                }
+              "
             />
           </div>
           <h2>{{ post.postTitle }}</h2>
@@ -286,7 +296,6 @@ import moment from "moment";
       groupedit: false,
       nameedit: false,
       descriptionedit: false,
-      showpost: false,
       postId: "",
       parentId: "",
       findByParentId: [],
@@ -335,7 +344,6 @@ import moment from "moment";
       this.onebytwo = false;
     },
     postdeatils(postId) {
-      this.showpost = !this.showpost;
       this.postId = postId;
     },
     async deletegroup() {
@@ -429,6 +437,9 @@ import moment from "moment";
   computed: {
     id: function () {
       return this.$route.params.id;
+    },
+    showpost: function () {
+      return this.$store.state.showpost;
     },
     userId: function () {
       return localStorage.getItem("userId");

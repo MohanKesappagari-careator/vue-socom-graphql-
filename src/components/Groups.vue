@@ -6,6 +6,8 @@
         @click="
           () => {
             $store.commit('addpostt');
+            $store.commit('showpostt');
+
             this.$router.push(`/home/${group.id}`);
             $store.commit('group', group);
             $store.commit('onebytwog');

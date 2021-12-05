@@ -23,6 +23,7 @@ export const store = createStore({
       createpost: false,
       search: true,
       serachinput: "",
+      showpost: false,
     };
   },
   mutations: {
@@ -83,6 +84,12 @@ export const store = createStore({
     },
     serachinputm(state, payload) {
       state.serachinput = payload;
+    },
+    showpostm(state) {
+      state.showpost = true;
+    },
+    showpostt(state) {
+      state.showpost = false;
     },
   },
 });
