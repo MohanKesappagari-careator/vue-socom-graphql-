@@ -44,7 +44,7 @@
       </div>
     </div>
     <div class="king">
-      <div class="post posti" v-if="onebytwo" @click="onebytwoG()">
+      <div class="post posti" v-if="onebytwo && !addpost" @click="onebytwoG()">
         <div>
           <div
             :class="post.user.id === userId ? 'card3' : 'card1'"
@@ -84,7 +84,7 @@
           </div>
         </div>
       </div>
-      <div class="infog" v-if="onebytwo">
+      <div class="infog" v-if="onebytwo && !addpost">
         <h3 style="margin-left: 6rem; margin-top: 1rem">Group Info</h3>
         <div class="groupimg">
           <img :src="image" alt="" />
@@ -154,7 +154,7 @@
       </div>
     </div>
 
-    <div class="post" v-if="!onebytwo && !showpost">
+    <div class="post" v-if="!onebytwo && !showpost && !addpost">
       <div
         :class="post.user.id === userId ? 'card2' : 'card1'"
         v-for="(post, index) of postdata"
@@ -192,7 +192,7 @@
         </div>
       </div>
     </div>
-    <div class="postdata" v-if="showpost">
+    <div class="postdata" v-if="showpost && !addpost">
       <div class="" v-for="(post, index) of postdata" :key="index">
         <div class="postdd" v-if="post.id === postId">
           <div class="postdataimg">
@@ -218,10 +218,38 @@
         </div>
       </div>
     </div>
+    <div class="post" v-if="addpost">
+      <div class="lll">
+        <select class="form-select" @change="onChange($event)">
+          <option v-for="(cat, i) of dropdown1data" :value="cat.id" :key="i">
+            {{ cat.name }}
+          </option>
+        </select>
+
+        <select class="form-select" @change="onChange1($event)">
+          <option v-for="(cat, i) of dropdown2data" :value="cat.id" :key="i">
+            {{ cat.name }}
+          </option>
+        </select>
+        <select
+          class="form-select"
+          @change="onChange1($event)"
+          v-if="dropdown3data.length !== 0"
+        >
+          <option v-for="(cat, i) of dropdown3data" :value="cat.id" :key="i">
+            {{ cat.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
     <div class="bottomnav">
       <div class="user1">
         <input type="text" />
       </div>
+      <button class="btn btn-success" @click="$store.commit('addpostm')">
+        Add Post
+      </button>
     </div>
   </div>
 </template>
@@ -247,6 +275,13 @@ import moment from "moment";
       descriptionedit: false,
       showpost: false,
       postId: "",
+      parentId: "",
+      findByParentId: [],
+      dropnumber: 1,
+      dropdown: "0",
+      dropdown1data: [],
+      dropdown2data: [],
+      dropdown3data: [],
       image:
         "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
@@ -256,6 +291,14 @@ import moment from "moment";
     this.moment = moment;
   },
   methods: {
+    onChange(value) {
+      this.dropdown = value.target.value;
+      console.log(value.target.value, "_");
+    },
+    onChange1(value) {
+      this.dropdown = value.target.value;
+      console.log(value.target.value, "_");
+    },
     edit1() {
       this.descriptionedit = !this.descriptionedit;
     },
@@ -370,8 +413,64 @@ import moment from "moment";
     userId: function () {
       return localStorage.getItem("userId");
     },
+    addpost: function () {
+      return this.$store.state.addpost;
+    },
+    dropdownnumber: function () {
+      if (this.dropdown1data.length === 0) {
+        return 1;
+      }
+      if (this.dropdown1data.length !== 0 && this.dropdown2data.length === 0) {
+        return 2;
+      }
+      if (
+        this.dropdown1data.length !== 0 &&
+        this.dropdown2data.length !== 0 &&
+        this.dropdown3data.length === 0
+      ) {
+        return 3;
+      }
+    },
   },
   apollo: {
+    findByParentId: {
+      query: gql`
+        query ($parentid: String!) {
+          findByParentId(parentid: $parentid) {
+            name
+            id
+          }
+        }
+      `,
+      variables() {
+        return {
+          parentid: this.dropdown,
+        };
+      },
+      update(data) {
+        if (this.dropdown1data.length == 0) {
+          console.log("dropdown1");
+          return (this.dropdown1data = data.findByParentId);
+        }
+        if (
+          this.dropdown1data.length !== 0 &&
+          this.dropdown2data.length === 0
+        ) {
+          console.log("dropdown2");
+
+          return (this.dropdown2data = data.findByParentId);
+        }
+        if (
+          this.dropdown1data.length !== 0 &&
+          this.dropdown2data.length !== 0 &&
+          this.dropdown3data.length === 0
+        ) {
+          console.log("dropdown3");
+
+          return (this.dropdown3data = data.findByParentId);
+        }
+      },
+    },
     groupposts: {
       query: gql`
         query ($groupId: String!) {
@@ -458,12 +557,27 @@ import moment from "moment";
       this.$apollo.queries.groupposts.refetch();
       this.$apollo.queries.group.refetch();
     },
+    dropdown(newValue) {
+      this.$apollo.queries.findByParentId.refetch();
+      console.log(newValue, "_");
+    },
   },
 })
 export default class Main extends Vue {}
 </script>
 
 <style>
+.lll {
+  display: flex;
+  flex-direction: column;
+  width: 30vw;
+}
+.nn {
+  width: 10rem;
+  height: 6rem;
+  margin-top: 1rem;
+  display: flex;
+}
 .admin {
   color: #128c7e;
   border: 1px solid #128c7e;
@@ -635,7 +749,7 @@ export default class Main extends Vue {}
   background: rgb(231, 239, 240);
   padding: 0.5rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   position: absolute;
   width: 70vw;
@@ -646,14 +760,13 @@ export default class Main extends Vue {}
   display: flex;
 }
 .user1 {
-  width: 55vw;
+  width: 40vw;
   padding: 0.5rem 2rem;
   background: white;
   border-radius: 2rem;
-  margin-left: 2rem;
 }
 .user1 input {
-  width: 50vw;
+  width: 35vw;
   outline: none;
   border: none;
 }

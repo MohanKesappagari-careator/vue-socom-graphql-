@@ -19,9 +19,11 @@ export const store = createStore({
       deletegroup: false,
       updategroupname: false,
       onebytwoo: false,
+      addpost:false
     };
   },
   mutations: {
+
     auth(state: any, payload) {
       state.currentuser.userId = payload.userId;
       state.currentuser.token = payload.token;
@@ -61,6 +63,9 @@ export const store = createStore({
     },
     onebytwogg(state) {
       state.onebytwoo = true;
+    },
+        addpostm(state){
+       state.addpost=!state.addpost
     },
   },
 });
