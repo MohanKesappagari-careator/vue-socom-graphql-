@@ -208,7 +208,13 @@
             <img
               src="https://mdbootstrap.com/img/new/standard/nature/111.jpg"
               alt=""
-              style="width: 40rem; height: 15rem; cursor: pointer"
+              style="
+                width: 40rem;
+                height: 15rem;
+                cursor: pointer;
+                margin-left: 2rem;
+                margin-top: 1rem;
+              "
               @click="
                 () => {
                   postdeatils(post.id);
@@ -217,17 +223,22 @@
               "
             />
           </div>
-          <h2>{{ post.postTitle }}</h2>
+          <h2 style="margin-top: 1rem; margin-left: 2rem">
+            {{ post.postTitle }}
+          </h2>
           <div
             class="att"
             v-for="(item, index) of post.postattribute"
             :key="index"
           >
-            <p class="attname">
-              <strong>{{ item.attribute.name }}</strong>
-            </p>
-            <p><strong>:</strong></p>
-            <p class="attval">{{ item.attributeValue }}</p>
+            <div class="attname">
+              <p>
+                <strong>{{ item.attribute.name }} </strong>
+              </p>
+            </div>
+            <div class="attval">
+              <p>{{ item.attributeValue }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -601,6 +612,21 @@ export default class Main extends Vue {}
 </script>
 
 <style>
+.postdataimg {
+  border-width: 20px;
+  border-image: repeating-radial-gradient(
+    circle at 10px,
+    turquoise,
+    pink 2px,
+    greenyellow 4px,
+    pink 2px
+  );
+}
+.attname {
+  width: 20rem;
+  margin-left: 2rem;
+  border-right: 1px solid rgb(184, 180, 180);
+}
 .lll {
   width: 31vw;
   margin-left: 10rem;
@@ -692,23 +718,20 @@ export default class Main extends Vue {}
 }
 
 .att {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid rgb(184, 180, 180);
 }
-.attname {
-  margin-left: 1rem;
-  margin-right: 1rem;
-}
-.attval {
-  margin-left: 3rem;
-}
+
 .postdata {
   background: white;
   position: relative;
-  margin-top: 6rem;
-  margin-bottom: 7rem;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin-top: 4rem;
+  margin-bottom: 6rem;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
+  overflow-y: scroll;
+  height: 30rem;
 }
 .icon:active,
 .icon:focus {
